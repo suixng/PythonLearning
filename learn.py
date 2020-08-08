@@ -496,3 +496,260 @@ print('-Apple Pies' + str(totalBrought(allGuests,'apples pies')))
 
 spam = "That is Alice's cat." #可以在字符串中使用'
 spam = 'Say hi to Bob\'s mother.' # \' 单引号 \"双引号 \t制表符 \n换行符 \\倒斜杠
+print(r'That is Carol\'s cat.') #That is Carol\'s cat  
+print('''Dear Alice,
+Eve's cat has been arrested for catnapping,cat burglary,and extortion
+Sincerely,
+Bob''') #直接按这个格式输出  多行字符串''' '''中的内容格式直接输出
+def spam():
+	"""This is a multiline comment to help explain what the spam() function does."""
+	print('Hello!')
+spam = 'Hello world!'
+spam[0] #H
+spam[-1] #!
+spam[0:5] #Hello
+spam[:5] #Hello
+spam[6:] #world!
+fizz = spam[0:5] #Hello
+'Hello' in 'Hello World' #True(大小写有区别)
+
+#有用的字符串方法
+
+spam = 'Hello World!'
+spam = spam.upper() #HELLO WORLD!
+spam = spam.lower() #hello world!
+spam.islower() #false
+spam.isupper() #false
+'HEELO'.isupper() #True
+'abc123456'.islower() #True
+'123456'.islower() #false
+
+print('How are you?')
+feeling = input()
+if feeling.lower() == 'great':
+	print('I feel great too.')
+else:
+	print('I hope the rest of your day is good')
+
+#isalpha() : 如果字符串只包含字母，且非空
+#isalnum() : 如果字符串只包含字母和数字，且非空
+#isdecimal() : 如果字符串只包含数字字符，且非空
+#isspace() : 如果字符串只包含空格、制表符和换行，且非空
+#istitle() : 如果字符串仅包含以大写字母开头、后面都是小写字母的单词
+
+while True:
+	print('Enter your age:')
+	age = input()
+	if age.isdecimal():
+		break
+	print('Please enter a number for your age')
+while True:
+	print('Select a new password (letters and number only):')
+	password = input()
+	if password.isalnum():
+		break
+	print('Passwords can only have letters and numbers.')
+
+'Hello World!'.startswith('Hello') #True
+'Hello World!'.endswith('World') #False
+
+'ABC'.join(['My','name','is','Simon']) # MyABCnameABCisABCSimon  join():针对字符串传入列表，返回字符串
+'My name is Simon'.split() # ['My','name','is','Simon'] spilt():针对一个字符串调用，返回一个字符串列表
+'My name is Simon'.split('m') #['My na','e is Si','on'] 默认以空白字符分割，也可自行指定
+
+'Hello'.rjust(10) #'     Hello'
+'Hello'.ljust(10) #'Hello     '
+'Hello'.rjust(10,'*') #'*****Hello'
+'Hello'.ljust(10,'-') #'Hello-----'
+'Hello'.center(10) #'  Hello   '
+'Hello'.center(10,'-') #'--Hello---'
+
+def printPicnic(itemDict,leftWidth,rightWidth):
+	print('PICNIC ITEMS'.center(leftWidth + rightWidth,'-'))
+	for k,v in itemDict.items():
+		print(k.ljust(leftWidth,'.') + str(v).rjust(rightWidth))
+printItems = {'sandwiches':4,'apples':12,'cups':4,'cookies':8000}
+printPicnic(picnicItems,12,5)
+picnicItems(picnicItems,20,6)
+
+spam = ' Hello World '
+spam.strip() #Hello World   strip():返回一个新的字符串，他的开头或末尾都没有空白字符
+spam.lstrip() #'Hello World '    
+spam.rstrip()  #' Hello World'
+spam = 'SpamSpamBaconSpamEggsSpamSpam'
+spam.strip('ampS') #'BaconSpamEggs'  strip('mapS'):删除两端出现的字符，顺序不重要
+
+
+#第七章：模式匹配与正则表达式
+
+#不用正则表达式来查找文本模式
+
+def isPhoneNumber(text):
+	if len(text)!=12:
+		return False
+	for i in range(0,3):
+		if not text[i].isdecimal():
+			return False
+	if text[3]!='-':
+		return False
+	for i in range(4,7):
+		if not text[i].isdecimal():
+			return False
+	if text[7]!='-':
+		return False
+	for i in range(8,12):
+		if not text[i].isdecimal():
+			return False
+	return True
+print('415-555-4242 is a phone number:')
+print(isPhoneNumber('415-555-4242')) # True
+print('Mosh mosh is a phone number:')
+print(isPhoneNumber('Mosh mosh')) # False
+
+message = 'Call me at 415-555-1011 tomorrow.415-555-9999 is my office'
+for i in range(len(message)):
+	chunk = message[i:i+12]
+	if isPhoneNumber(chunk):
+		print('Phone number found:' + chunk)
+print('Done')
+
+#用正则表达式查找文本模式
+
+import re
+phoneNumber = re.compile(r'\d\d\d-\d\d\d\d-\d\d\d')
+mo = phoneNumRegex.search('My number is 415-555-4242.')
+print('Phone number found:'+mo.group()) # Phone number found: 415-555-4242
+
+#用正则表达式匹配更多模式
+#利用括号进行分组
+phoneNumber = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
+mo = phoneNumRegex.search('My number is 415-555-4242')
+print(mo.group(1)) # 415
+print(mo.group(2)) # 555-4242
+print(mo.group(0)) # 415-555-4242
+print(mo.group()) # 415-555-4242
+print(mo.groups()) # 415,555-4242
+areaCode,mainNumber = mo.groups()
+print(areaCode) # 415
+print(mainNumber) # 555-4242
+#本身存在括号
+phoneNumRegex = re.compile(r'(\(\d\d\d))(\d\d\d-\d\d\d\d)')
+mo = phoneNumRegex.search('My number is (415) 555-4242')
+print(mo.group(1)) # (415)
+print(mo.group(2)) # 555-4242
+
+#用管道模式匹配多个分组(字符|称为管道)
+heroRegex = re.compile(r'Batman|Tina Fey')
+mo1 = heroRegex.search('Batman and Tina Fey.')
+print(mo1.group()) # Batman
+mo2 = heroRegex.search('Tina Fey and Batman')
+print(mo2.group()) # Tina Fey
+
+batRegex = re.compile(r'Bat(man|mobile|copter|bat)')
+mo = batRegex.search('Batmobile lost a wheel')
+print(mo.group()) # Batmobile
+print(mo.group(1)) # mobile
+
+#用问号实现可选匹配
+batRegex = re.compile(r'Bat(wo)?man')
+mo1 = batRegex.search('The Adventure of Batman')
+print(mo1.group()) # Batman
+mo2 = batRegex.search('The Adventure of Batwoman')
+print(mo2.group()) # Batwoman
+
+phoneRegex = re.compile(r'(\d\d\d-)?\d\d\d-\d\d\d\d')
+mo1 = phoneRegex.search('My number is 415-555-4242')
+print(mo1.group()) # 415-555-4242
+mo2 = phoneRegex.search('My number is 555-4242')
+print(mo2.group()) # 555-4242
+ 
+#用星号匹配零次或多次
+batRegex = re.compile(r'Bat(wo)*man')
+mo1 = batRegex.search('The Adventure of Batman')
+print(mo1.group()) # Batman
+mo2 = batRegex.search('The Adventure of Batwoman')
+print(mo2.group()) #Batwoman
+mo3 = batRegex.search('THe Adventure of Batwowoman')
+print(mo3.group()) # Batwowoman
+
+#用加号匹配一次或多次
+batRegex = re.compile(r'Bat(wo)+man')
+mo1 = batRegex.search('The Adventure of Batwoman')
+print(mo1.group()) # Batwoman
+mo2 = batRegex.search('The Adventure of Batwowoman')
+print(mo2.group()) # Batwowoman
+mo3 = batRegex.search('The Adventure of Batman')
+print(mo3 == None) #True
+
+#用花括号匹配特定次数(Ha){3}  (Ha){3,5}  (Ha){3,}
+haRegex = re.compile(r'(Ha){3}')
+mo1 = haRegex.search('HaHaHa')
+print(mo1.group()) # HaHaHa
+mo2 - haRegex.search('Ha')
+print(mo2 == None) # True
+
+#贪心和非贪心匹配
+greedyHaRegex = re.compile(r'(Ha){3,5}')
+mo1 = greedyHaRegex.search('HaHaHaHaHa')
+print(mo1.group()) # HaHaHaHaHa
+nongreedyHaRegex = re.compile(r'(Ha){3,5}?')
+mo2 = nongreedyHaRegex.search('HaHaHaHaHa')
+print(mo2.group()) #HaHaHa
+
+#findall()方法
+phoneNumber = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+mo = phoneNumberRegex.search('Cell:415-555-9999 Work:212-555-0000')
+print(mo.group()) # 415-555-9999
+print(phoneNumRegex.findall('Cell:415-555-9999 Work:215-555-0000')) # ['415-555-9999','212-555-0000]
+
+phoneNumRegex = re.compile(r'(\d\d\d)-(\d\d\d)-(\d\d\d\d)')
+print(phoneNumRegex.findall('Cell:415-555-999 Work: 212-555-0000')) # [('415','555','9999'),('212','555','0000')]
+
+#建立自己的字符分类
+vowelRegex = re.compile(r'[aeiouAEIOU]')
+print(vowelRegex.findall('RobCop eats baby food. BABY FOOD.')) # ['o','o','o','e','a','a','o','o','A','O','O']
+consonantRegex = re.compile(r'[^aeiouAEIOU]')
+print(consonantRegex.findall('RobCop eats baby food. BABY FOOD.')) # 不存在字符类中所有字符
+
+#插入字符和美元字符
+beginsWithHello = re.compile(r'^Hello')
+beginsWithHello.search('Hello World')
+print(beginsWithHello.search('He said hello') == None) # True
+
+endsWithNumber = re.compile(r'\d$')
+endsWithNumber.search('Your number is 42')
+print(endsWithNumber.search('Your number is forty two') == None) # True
+
+wholeStringIsNum = re.compile(r'^\d+$')
+print(wholeStringIsNum.search('12345xyz67890') == None) # True
+print(wholeStringIsNum.search('12 34567890') == None) # True
+
+#通配字符
+atRegex = re.compile(r'.at') #句号.通配符只匹配一个字符(除了换行之外所有字符)
+print(atRegex.findall('The cat in the hat sat on the flat mat')) # ['cat','hat,'sat','lat','mat']
+#用点-星匹配所有字符(用re.DOTALL可以让句点.字符匹配所有字符，包括换行字符)
+nameRegex = re.compile(r'First Name: (.*) Last Name: (.*)')
+mo = nameRegex.search('First Name: AI Last Name: Swigart')
+print(mo.group(1)) # AI
+print(mo.group(2)) # Swigart
+
+nongreedyRegex = re.compile(r'<.*?>')
+mo = nongreedyRegex.search('<To serve man> for dinner.>')
+print(mo.group()) # <To serve man>
+greedyRegex = re.compile(r'<.*>')
+mo = greedyRegex.search('<To serve man> for dinner.>')
+print(mo.group()) # <To serve man> for dinner.>
+
+#不分大小写的匹配
+robot = re.compile(r'robot',re.I)
+robot.search('Robot is part man,part machine,all cop').group() # Robot
+robot.search('ROBOT is part man,part machine,all cop').group() # ROBOT
+robot.search('robot is part man,part machine,all cop').group() # robt
+
+#用sub()方法替换字符串
+namesRegex = re.compile(r'Agent \w+')
+print(namesRegex.sub('CENSORED','Agent Alice gave Agent Bob')) # CENSORED gave CENSORED 
+
+agentNamesRegex = re.compile(r'Agent (\w)\w*')
+print(agentNamesRegex.sub(r'\1****','Agent ALice told Agent Carol that Agent Eve knew Agent Bob was a double agent.')) # A**** told C**** that ....
+
