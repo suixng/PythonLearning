@@ -787,3 +787,124 @@ if len(matches) > 0:
 	print('\n'.join(matches))
 else:
 	print('NO phone numbers or email address found.')
+	
+#当前工作目录
+import os
+print(os.getcwd())	#C:\\python34
+os.chdir('C:\\Windows\\System32')
+print(os.getcwd())	#C:\\Windows\\System32
+
+#用os.makedirs()创建文件夹
+import os
+os.makedirs('C:\\delicious\\walnut\\waffles')
+
+#处理绝对路径和相对路径
+print(os.path.abspath('.'))	#C:\\Python34 返回参数的绝对路径的字符串
+print(os.path.abspath('.\\Scripts'))	#C:\\Python34\\Scripts	
+print(os.path.isabs('.'))	#False	判断是否是绝对路径
+print(os.path.isabs(os.path.abspath('.')))	#True
+print(os.path.relpath('C:\\Windows','C:\\'))	#Windows 返回从start路径到path的相对路径的字符串
+print(os.path.relpath('C:\\Windows','C:\\spam\\eggs'))	#..\\..\\Windows
+print(os.getcwd())	#C:\\Python34
+path = 'C:\\Windows\\System32\\calc.exe'
+print(os.path.basename(path))	#calc.exe 返回包含path参数中最后一个斜杠之后的所有内容
+print(os.path.dirname(path))	#C:\\Windows\\System32	返回包含path参数中最后一个斜杠之前的内容
+calcFilePath = 'C:\\Windows\\System32\\calc.exe'
+print(os.path.split(calcFilePath))	#'C:\\Windows\\System32','calc.exe'
+print(os.path.dirname(calcFilePath),os.path.basename(calcFilePath))	#'C:\\Windows\\System32','calc.exe'
+print(calcFilePath.spilt(os.path.sep))	#'C:','Windows','System32','calc.exe'
+#查看文件夹大小和文件夹内容
+print(os.path.getsize('C:\\Windows\\System32\\calc.exe'))	#771629返回参数中的文件的字节数
+print(os.listdir('C:\\Windows\\System32'))	#返回文件名字符串的列表，包含参数中的每个文件
+
+totalSize = 0
+for filename in os.listdir('C:\\Windows\\System32'):
+	totalSize = totalSize + os.path.getsize(os.path.join('C:Windows\\System32',filename))
+print(totalSize)
+#检查路径有效性
+print(os.path.exits('C:\\Windows'))	#检查文件或文件夹是否存在
+print(os.path.isdir('C\\Windows\\System32'))	#检查是否是文件夹
+print(os.path.isfile('C:\\Windows\\System32\\clac.exe'))	#检查是否是文件
+
+#文件读写过程
+#用open()函数打开文件
+helloFile = open('C:\\Users\\Administrator\\hello.txt')
+helloFile
+#读取文件内容
+helloContent = helloContent.read()
+helloContent
+sonnetFile = open('sonnetFile.txt')
+sonnetFile.readlines()
+#写入文件
+baconFile = open('bacon.txt','w')	#以写模式打开文件
+baconFile.write('Hello World!\n')
+baconFile.close()
+baconFile = open('bacon.txt','a')	#以添加模式打开文件
+baconFile.write('Bacon is not a vegetable')
+baconFile.close()
+baconFile = open('bacon.txt')
+content = baconFile.read()
+baconFile.close()
+print(content)
+#用shelve模块保存变量
+import shelve
+shelfFile = shelve.open('data')
+cats = ['Zombie','Pooka','Simon']
+shelfFile['cats'] = cats
+shelfFile.close()
+
+shelfFile = shelve.open('data')
+type(shelfFile)
+print(shelfFile['cats']) #['Zombie','Pooka','Simon']
+shelfFile.close()
+
+shelfFile = shelve.open('data')
+list(shelfFile.keys())
+print(list(shelfFile['cats'])) #[['Zombie','Pooka','Simon']]
+shelfFile.close()
+
+#用pprint.pformat()函数保存变量
+import pprint
+cats = [{'name':'Zombie','desc':'chubby'},{'name':'Pooka','desc':'fluffy'}]
+pprint.pformat(cats)	#[{'desc':'chubby','name':'Zombie'},{'desc':'fluffy','name':'Pooka'}]
+fileObj = open('myCats.py','w')
+fileObj.write('cats = ' + pprint.pformat(cats) + '\n')
+fileObj.close()
+
+#生成随机的测验试卷文件
+#将测验数据保存在一个字典中
+#创建答案选项
+#将内容写入测验试卷和答案文件
+import random
+#The quiz data.Keys are states and values are their capitals
+capitals = {'Alabama':'Montgomery','Alaska':'Juneau','Arizona':'Phoenix'}
+#Genarate 3 quiz files
+for quizNum in range(3):
+	#Create the quiz and answer key files
+	quizFile = open('capitalsquiz%s.txt'%(quizNum + 1),'w')
+	answerKeyFile = open('capitalsquiz_answer%s.txt'%(quizNum + 1),'w')
+	#Write out the header for the quiz
+	quizFile.write('Name:\n\nDate:\n\nPeriod:\n\n')
+	quizFile.write((' '*20)+'State Capitals Quiz (Form %s)'%(quizNum + 1))
+	quiz.File.write('\n\n')
+	#Shuffle the order of the states
+	states = list(capitals.keys())
+	random.shuffle(states)
+	#Look through all 50 states,making a question for each
+	for questionNum in range(50):
+		#Get right and wrong answers.
+		correctAnswer = capitals[states[questionNum]]
+		wrongAnswers = list(capitals.values())
+		del wrongAnswers[wrongAnswers.index(correctAnswer)]
+		wrongAnswers = random.sample(wrongAnswers,3)
+		answerOptions = wrongAnswers + [correctAnswer]
+		random.shuffle(answerOptions)
+		#Write the question and the answer options to the quiz file
+		quizFile.write('%s.What is the capital of %s?\n'%(questionNum + 1,states[questionNum]))
+		for i in range(4):
+			quizFile.write('%s.%s\n'%('ABCD'[i],answerOptions[i]))
+		quizFile.write('\n')
+		#Write the answer key to a file
+		answerKeyFile.write('%s.%s\n'%(questionNum + 1,'ABCD'[answerOptions.index(correctAnswer)]))
+		quizFile.close()
+		answerKeyFile.close()
