@@ -908,3 +908,197 @@ for quizNum in range(3):
 		answerKeyFile.write('%s.%s\n'%(questionNum + 1,'ABCD'[answerOptions.index(correctAnswer)]))
 		quizFile.close()
 		answerKeyFile.close()
+
+#组织文件
+#shutil模块
+#复制文件和文件夹
+import shutil,os
+os.chdir('C:\\')
+shutil.copy('C:\\spam.txt','C:\\delicious')
+shutil.copy('eggs.txt','C:\\delicious\\eggs2.txt')
+shutil.copytree('C:\\bacon','C:\\bacon_backup')
+#文件和文件夹的移动和改名
+import shutil
+shutil.move('C:\\bacon.txt','C:\\eggs')
+shutil.move('C:\\bacon.txt','C:\\eggs\\new_bacon.txt')
+shutil.move('C:\\bacon.txt','C:\\eggs')
+#永久删除文件和文件夹
+import os
+os.unlink(path)
+os.rmdir(path)
+shutil.rmtree(path)
+#用send2trash模块安全地删除
+#send2trash.send2trash('bacon.txt')
+#遍历目录树
+import os
+for folderName,subfolders,filenames in os.walk('C:\\delicious'):
+	print('The current folder is ' + folderName)
+	for subfolder in subfolders:
+		print('SUBFOLDER OF ' + folderName + ':' + subfolder)
+	for filename in filenames:
+		print('FILE INSIDE ' + folderName + ':' + filename)
+#用zipfile模块压缩文件
+#读取zip文件
+import zipfile,os
+os.chdir('C:\\')
+exampleZip = zipfile.ZipFile('example.zip')
+exampleZip.namelist()	#['spam.txt','cats/','cats/catnames.txt','cats/zombie.jpg']
+spamInfo = exampleZip.getInfo('spam.txt')
+print(spamInfo.file_size)
+print(spamInfo.compress_size)
+print('Compress file is %sx smaller !'%(round(spamInfo.file_size / spamInfo.compress_size,2)))
+exampleZip.close()
+#从zip文件中解压缩
+import zipfile,os
+os.chdir('C:\\')
+exampleZip = zipfile.ZipFile('example.zip')
+exampleZip.extractall()
+exampleZip.close()
+exampleZip.extract(('spam.txt'))
+exampleZip.extract('spam.txt','C:\\some\\new\\folders')
+exampleZip.close()
+#创建和添加到zip文件
+import zipfile
+newZip = zipfile.ZipFile('new.zip','w')
+newZip.write('spam.txt',compress_type=zipfile.ZIP_DEFLATED)
+newZip.close()
+#将带有美国风格日期的文件改名为欧洲风格日期
+#为美国风格的日期创建一个正则表达式
+import shutil,os,re
+#Create a regex that matches files with the American data format
+dataPattern = re.compile(r"""^(.?)
+	((0|1)?\d)-				#One or two digits for the month
+	((0|1|2|3)?\d)-			#one or two digits for the day
+	((19|20)\d\d)			#four digits for the year
+	(.*?)$					#all text after the data
+	""",re.VERBOSE)
+#识别文件名中的日期部分
+#Loop over the files in the working directory
+for amerFilename in os.listdir('.'):
+	mo = dataPattern.search(amerFilename)
+	#skip files without a data
+	if mo == None:
+		continue
+	#Get the different parts of the filename
+	beforePart = mo.group(1)
+	monthPart = mo.group(2)
+	dayPart = mo.group(3)
+	yearPart = mo.group(4)
+	afterPart = mo.group(5)
+#构建新文件名，并对文件改名
+	#From the European-style filename
+	euroFilename = beforePart + dayPart + '-' + monthPart + '-' + yearPart +'-' + afterPart
+	#Get the full,absolute file paths
+	absWorkingDir = os.path.abspath('-')
+	amerFilename = os.path.join(absWorkingDir,amerFilename)
+	euroFilename = os.path.join(absWorkingDir,euroFilename)
+	#Rename the files
+	print('Renaming "%s" to "%s"...'%(amerFilename,euroFilename))
+	#shutil.move(amerFilename,euroFilename) #uncomment after testing
+#将一个文件夹备份到一个zip文件
+#弄清楚zip文件的名称
+#创建新zip文件
+#遍历目录树并添加到zip文件
+
+import zipfile,os
+def backupToZip(folder):
+	#Backup the entire contents of "folder" into a ZIP file
+	folder = os.path.abspath(folder)	#make sure folder is absolute
+	#Figure out the filename this code should use based on
+	#what files already exists
+	number = 1
+	while True:
+		zipFilename = os.path.basename(folder) + '_' + str(number) + '.zip'
+		if not os.path.exists(zipFilename):
+			break
+		number = number + 1
+	#Create the ZIP file
+	print('Creating %s...' %(zipFilename))
+	backupZip = zipfile.ZipFile(zipFilename,'w')
+	#Walk the entire folder tree and compress the files in each folder
+	for foldername,subfolders,filenames in os.walk(folder):
+		print('Adding files in %s...' %(foldername))
+		#Add the current folder to the ZIP file
+		backupZip.write(foldername)
+	#Add all the files in this folder to the ZIp file
+	for filename in filenames:
+		newBase = os.path.basename(folder)  + '_'
+		if filename.startswith((newBase)) and filename.endswith('.zip'):
+			continue	#don't backup the backup ZIp files
+		backupZip.write(os.path.join(foldername,filename))
+	backupZip.close()
+	print('Done.')
+backupToZip('C:\\delicious')
+
+#从web抓取信息
+#利用webbrowser模块的mapIt.py
+import webbrowser
+webbrowser.open('http://www.baidu.com')
+#弄清楚URL
+#处理命令行参数
+#处理剪切板内容，加载浏览器
+import webbrowser,sys,pyperclip
+if len(sys.argv>1):
+    #Get address form command line.
+    address = ' '.join(sys.argv[1:])
+else:
+    #Get address form clipboard
+    address = pyperclip.paste()
+webbrowser.open('http://www.google/maps/place/' + address)
+
+#用requests模块从Web下载文件
+import requests
+res = requests.get('http://gutenberg.org/cache/equb/1112/pg1112.txt')
+type(res)
+print(res.status_code == requests.codes.ok)
+print(len(res.text))
+print(res.text[:250])
+#检查错误
+res.raise_for_status()  #下载出错抛出异常，成功则跳过
+#将下载的文件保存到硬盘
+import requests
+res = requests.get('http://gutenberg.org/cache/equb/1112/pg1112.txt')
+res.raise_for_status()
+playFile = open('RomeoAndJuliet.txt','wb')
+for chunk in res.iter_content(100000):
+    playFile.write(chunk)
+playFile.close()
+
+#从HTML创建一个BeautifulSoup对象
+import requests,bs4
+res = requests.get('http://nostarch.com')
+res.raise_for_status()
+noStarchSoup = bs4.BeautifulSoup(res.text)
+print(type(noStarchSoup))
+
+exampleFile = open('example.html')
+exampleSoup = bs4.BeautifulSoup(exampleFile)
+print(type(exampleSoup))
+
+#用select()方法寻找元素
+import bs4
+exampleFile = open('example.html')
+exampleSoup = bs4.BeautifulSoup(exampleFile.read())
+elems = exampleSoup.select('#author')
+print(type(elems))
+print(len(elems))
+print(type(elems[0]))
+print(elems[0].getText())
+print(str(elems[0]))
+print(elems[0].attrs)
+
+#Google查找
+#获取命令行参数，并请求查找页面
+#找到所有的结果
+#针对每个结果打开Web浏览器
+import requests,sys,webbrowser,bs4
+print('Goopling...')    #display text while downloading the google page
+res = requests.get('http://google.com/search?q=' + ' '.join(sys.argv[1:]))
+res.raise_for_status()
+#Retrieve top search result links
+soup = bs4.BeautifulSoup(res.text)
+#Open a browser tab for each result
+linkElems = soup.select('.r a')
+numOpen = min(5,len(linkElems))
+for i in range(numOpen):
+    webbrowser.open('http://google.com' + linkElems[i].get('href'))
