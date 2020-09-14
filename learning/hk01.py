@@ -100,39 +100,53 @@
 # print(test())
 
 #电话号码与E-mail地址提取程序
-import pyperclip, re
-phoneRegex = re.compile(r'''(
-	(\d{3}|\(d{3}\))?					#Area code
-	(\s|-|\.)?							#separator
-	(\d{3})								#first 3 digits
-	(\s|-|\.)							#separator
-	(\d{4})								#last 4 digits
-	(\s*(ext|x|ext\.)\s*(\d{2,5}))?		#extension
-	)''',re.VERBOSE)
+# import pyperclip, re
+# phoneRegex = re.compile(r'''(
+# 	(\d{3}|\(d{3}\))?					#Area code
+# 	(\s|-|\.)?							#separator
+# 	(\d{3})								#first 3 digits
+# 	(\s|-|\.)							#separator
+# 	(\d{4})								#last 4 digits
+# 	(\s*(ext|x|ext\.)\s*(\d{2,5}))?		#extension
+# 	)''',re.VERBOSE)
 
-emailRegex = re.compile(r'''(
-	[a-zA-A0-9._%+-]+		#usernama
-	@						#@ symbol
-	[a-zA-Z0-9.-]+			#domain name
-	(\.[a-zA-Z]{2,4})		#dot-something
-	)''')
+# emailRegex = re.compile(r'''(
+# 	[a-zA-A0-9._%+-]+		#usernama
+# 	@						#@ symbol
+# 	[a-zA-Z0-9.-]+			#domain name
+# 	(\.[a-zA-Z]{2,4})		#dot-something
+# 	)''')
 
-text = str(pyperclip.paste())
-matches = []
-for groups in phoneRegex.findall(text):
-	phoneNum = '-'.join([groups[1],groups[3],groups[5]])
-	if groups[8] != '':
-		phoneNum += ' x' + groups[8]
-	matches.append(phoneNum)
-for groups in emailRegex.findall(text):
-	matches.append(groups[0])
+# text = str(pyperclip.paste())
+# matches = []
+# for groups in phoneRegex.findall(text):
+# 	phoneNum = '-'.join([groups[1],groups[3],groups[5]])
+# 	if groups[8] != '':
+# 		phoneNum += ' x' + groups[8]
+# 	matches.append(phoneNum)
+# for groups in emailRegex.findall(text):
+# 	matches.append(groups[0])
 
-if len(matches) > 0:
-	pyperclip.copy('\n'.join(matches))
-	print('Copied to clipboard')
-	print('\n'.join(matches))
-else:
-	print('NO phone numbers or email address found.')
+# if len(matches) > 0:
+# 	pyperclip.copy('\n'.join(matches))
+# 	print('Copied to clipboard')
+# 	print('\n'.join(matches))
+# else:
+# 	print('NO phone numbers or email address found.')
+from socket import socket
 
+
+def main():
+    # 1.创建套接字对象默认使用IPv4和TCP协议
+    client = socket()
+    # 2.连接到服务器(需要指定IP地址和端口)
+    client.connect(('127.0.0.1', 8841))
+    # 3.从服务器接收数据
+    print(client.recv(1024).decode('utf-8'))
+    client.close()
+
+
+if __name__ == '__main__':
+    main()
 
 
