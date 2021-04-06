@@ -1083,6 +1083,7 @@ print(type(noStarchSoup))
 exampleFile = open('example.html')
 exampleSoup = bs4.BeautifulSoup(exampleFile)
 print(type(exampleSoup))
+print(type(exampleSoup))
 
 #用select()方法寻找元素
 import bs4
