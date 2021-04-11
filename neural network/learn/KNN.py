@@ -137,5 +137,14 @@ def datingClassTest():
     #     print errorCount
 
 #使用算法：产生简单的命令行程序，然后可以输入一些特征数据以判断对方是否为自己喜欢的类型
-
+def classifyPerson():
+    resultList = ['not at all','in small doses','in large doses']
+    percentTats = float(raw_input("percentage of time spent playing video games?"))
+    ffMiles = float(raw_input("frequent filer miles earned per year?"))
+    iceCream = float(raw_input("liters of ice cream consumed per year?"))
+    datingDataMat,datingLables = file2matrix('datingTestSet2.txt')
+    normMat,ranges,minVals = autoNorm(datingDataMat)
+    inArr = array([ffMiles,percentsTats,iceCream])
+    classifierResult = classify0((inArr-minVals)/ranges,normMat,datingLables,3)
+    print"You will probably like this person:",resultList[classifierResult - 1]
    
