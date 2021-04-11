@@ -263,7 +263,7 @@ def datingClassTest():
     #设置测试数据的一个比例(训练数据集比例=1-hoRatio)
     hoRatio = 0.1   #测试范围，一部分测试一部分作为样本
     #从文本中加载数据
-    datingDataMat,datingLabels = file2matrix("learn/datingTestSet2.txt")  #load data setfrom file
+    datingDataMat,datingLabels = file2matrix("F:\\study\\programing\\python\\neural_network\\learn\\datingTestSet2.txt")  #load data setfrom file
     #归一化数据
     normMat,ranges,minVals = autoNorm(datingDataMat)
     # m表示数据的行数，即矩阵的第一维
