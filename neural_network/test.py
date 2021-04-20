@@ -7,6 +7,7 @@ path="F:/class/neural_network"+os.sep+"LogiReg_data.txt"
 pdData = pd.read_csv(path,header=None,names=['Exam1','Exam2','Admitted'])
 #pdData.head(3)
  
+ 
 ##画出录取和未录取的散点分布图
 positive = pdData[pdData['Admitted'] == 1]
 negative = pdData[pdData['Admitted'] == 0]
@@ -49,19 +50,22 @@ y = orig_data[:,cols-1:cols]
 ##构建参数矩阵
 theta = np.zeros([1,3])
 #print(theta)
- 
+
+
+
+
 ####损失函数（实现似然函数）,
 def cost(X,y,theta):
     left = np.multiply(-y,np.log(model(X,theta)))
     right = np.multiply(1 - y,np.log(1 - model(X,theta)))
-    return np.sum(left-right)/(len(X))/n
+    return np.sum(left-right)/(len(X))
  
 #print(cost(X,y,theta))
  
 ####计算梯度,计算每个参数的梯度
 def gradient(X,y,theta):
-    grad = np.zeros(theta.shape) ##占位
-    error = (model(X,theta)-y)[:,1]
+    grad = np.zeros_like(theta) ##占位
+    error = (model(X,theta)-y).ravel()
     for j in range(len(theta.ravel())):
         term = np.multiply(error,X[:,j])###X的行表示样本，列表示特征
         grad[0,j] = np.sum(term) / len(X)
@@ -80,14 +84,21 @@ def stopCriterion(type,value,threshod):
     elif type == STOP_COST: return abs(value[-1]-value[-2] < threshod)
     elif type == STOP_GRAD: return np.linalg.norm(value) < threshod
  
- 
+
+
+#调用sklearn 会很方便
+from sklearn import preprocessing as pp  
+scaled_data=orig_data.copy()
+scaled_data[:,1:3]=pp.scale(orig_data[:,1:3])  #对x0不进行缩放
+
+
 ###洗牌,避免数据收集过程中有规律，打乱数据，可以得到更好的模型
 import numpy.random
 def shuffleData(data):
     np.random.shuffle(data)
     cols = data.shape[1]
-    X = data[:,0:cols-1]
-    y = data[:,cols-1]
+    X = data[:,:cols-1]
+    y = data[:,cols-1:cols]
     return X,y
  
 ####梯度下降求解
@@ -97,8 +108,9 @@ def descent(data,theta,batchSize,stopType,thresh,alpha):
     i = 0 #迭代次数
     k = 0 #batch
     X,y = shuffleData(data)
-    grad = np.zeros(theta.shape)
-    costs = [cost(X,y,theta)]
+    #grad = np.zeros(theta.shape)    #计算的梯度
+    grad=np.zeros_like(theta)  #梯度方向
+    costs = [cost(X,y,theta)]   #损失值
  
     while True:
         grad = gradient(X[k:k+batchSize],y[k:k+batchSize],theta)
@@ -108,6 +120,7 @@ def descent(data,theta,batchSize,stopType,thresh,alpha):
            X,y = shuffleData(data)
         theta = theta -alpha*grad ##参数更新
         costs.append(cost(X,y,theta)) ##计算新的损失
+        
         i += 1
  
         if stopType == STOP_ITER: value = i
@@ -133,22 +146,29 @@ def RunExp(data,theta,batchSize,stopType,thresh,alpha):
     return theta
  
 n=100
-RunExp(orig_data,theta,n,STOP_ITER,thresh=120000,alpha=0.00000012)
+RunExp(scaled_data,theta,n,STOP_ITER,thresh=50000,alpha=0.001)
+
+
  
 ###计算模型精度
  
  
-##设定阈值
+#设定阈值
 def predict(X,theta):
     return [1 if x >= 0.5 else  0 for x in model(X,theta)]
  
-scaled_X = orig_data[:,:3]
-y = orig_data[:,3]
+scaled_X = scaled_data[:,:3]
+y = scaled_data[:,3]
 predicts = predict(scaled_X,theta)
+
+
  
 correct = [1 if ((a == 1 and b == 1) or (a == 0 and b == 0)) else 0 for (a,b) in zip(predicts,y)]
-accuracy = (correct.count(1) % len(correct))
+accuracy = (sum(map(int, correct)) % len(correct))
 print("accuracy = {0}%".format(accuracy))
+
+
+
 
 
 

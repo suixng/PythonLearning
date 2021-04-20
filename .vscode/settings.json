@@ -4,6 +4,7 @@
         "docx",
         "numpy",
         "pygame",
-        "pyperclip"
+        "pyperclip",
+        "sklearn"
     ]
 }
