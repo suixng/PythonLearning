@@ -42,7 +42,7 @@ pdData.insert(0,'Ones',1)
  
 orig_data = pdData.values ##变为矩阵
 ##print(orig_data)
-cols = orig_data.shape[1]
+cols = orig_data.shape[1]   #计算data的列数
 X = orig_data[:,0:cols-1]
 #print(X[:5]) ##前5行
 y = orig_data[:,cols-1:cols]
@@ -146,7 +146,7 @@ def RunExp(data,theta,batchSize,stopType,thresh,alpha):
     return theta
  
 n=100
-RunExp(scaled_data,theta,n,STOP_ITER,thresh=50000,alpha=0.001)
+RunExp(scaled_data,theta,n,STOP_ITER,thresh=500000,alpha=0.001)
 
 
  
