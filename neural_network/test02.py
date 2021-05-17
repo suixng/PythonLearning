@@ -1,4 +1,5 @@
-import numpy
+import numpy 
+import numpy as np
 import scipy.special
 import matplotlib.pyplot
 import pylab
@@ -59,7 +60,10 @@ learning_rate = 0.05
  
 n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
  
-training_data_file = open("mnist_train_100.csv", 'r')
+#training_data_file = open("F:/class/neural_network", 'r')
+red = np.load("F:/class/neural_network/mnist.npz")
+training_data_file = red.files
+training_data_file = red['x_train']
 training_data_list = training_data_file.readlines()
 training_data_file.close()
  
@@ -78,7 +82,10 @@ for e in range(epochs):
     pass
  
 #测试神经网络
-test_data_file = open("mnist_test_10.csv", 'r')
+#test_data_file = open("F:/class/neural_network", 'r')
+read = np.load("F:/class/neural_network/mnist.npz")
+test_data_file = read.files
+test_data_file = read['x_test']
 test_data_list = test_data_file.readlines()
 test_data_file.close()
  
