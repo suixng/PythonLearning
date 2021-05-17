@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Apr  9 11:01:13 2020
-@author: 白鸟无言
-"""
+
 # 鸢尾花分类
 import tensorflow as tf
 import numpy as np
@@ -39,7 +35,7 @@ w1 = tf.Variable(tf.random.truncated_normal([4, 3], stddev=0.1))
 b1 = tf.Variable(tf.random.truncated_normal([3], stddev=0.1))
 
 lr = 0.2 # 学习率/步长
-epoch = 300 # 迭代总次数
+epoch = 1000 # 迭代总次数
 loss_all = 0 # 每次迭代的损失
 loss_list = [] # 存储每一次迭代的损失
 acc_list = [] # 存储每一次迭代结果的准确率
@@ -91,14 +87,14 @@ for epoch in range(epoch):
     #print("-------------------")
     
 # 画出损失函数曲线
-# plt.plot(loss_list)
-# plt.title("Loss Curve")
-# plt.xlabel("Epoch")
-# plt.ylabel("Loss")
-# plt.show()
-# 画出正确率曲线
-plt.plot(acc_list)
-plt.title("Acc Curve")
+plt.plot(loss_list)
+plt.title("Loss Curve")
 plt.xlabel("Epoch")
-plt.ylabel("Acc")
+plt.ylabel("Loss")
 plt.show()
+# 画出正确率曲线
+# plt.plot(acc_list)
+# plt.title("Acc Curve")
+# plt.xlabel("Epoch")
+# plt.ylabel("Acc")
+# plt.show()
